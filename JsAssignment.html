@@ -1,0 +1,41 @@
+<html>
+<style type="text/css">
+	
+table {
+	width: 100%;
+	height: 100%;	
+	border-collapse: collapse;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+th{
+	color: #fff;
+	background-color: #55608f;	
+}
+</style>
+    <body>
+    <table border="1" id="hi" ></table>
+    <script>      
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://jsonplaceholder.typicode.com/users/", true);
+xhr.responseType="json"
+xhr.onload = function () {
+if (xhr.readyState === 4) {
+if (xhr.status === 200) {
+var a=xhr.response;
+//console.log(a[0]);
+var text="<tr><th>Name</th><th>Email</th><th>Phone</th><th>Website</th><th>Company name</th><th>view</th></tr>";
+for (var i = 0; i <10; i++)  {
+text+='<tr><td>'+a[i]["name"]+'</td><td>'+a[i]["email"]+'</td><td>'+a[i]["phone"]+'</td><td>'+a[i]["website"]+'</td><td>'+a[i]["company"]["name"]+'</td><td><a href="JsAssignment2.html?user='+a[i]["id"]+'">View Posts</a></td></tr>';
+}
+document.getElementById("hi").innerHTML=text;
+
+
+} else {
+console.error(xhr.statusText);
+}
+}
+};
+xhr.send(null);
+</script>
+</body>
+</html>
