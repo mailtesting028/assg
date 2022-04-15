@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script>
+    var a=window.location.search;
+    const p=new URLSearchParams(a);
+let  ur="https://jsonplaceholder.typicode.com/users/"+p.get('user')+"/posts";
+fetch(ur)
+  .then((response) => response.json())
+  .then(function(json){
+text="";
+for(let i=0;i<json.length;i++){
+    text+='<label id="lab'+i+'" >   <div class="ck" id="di'+i+'"> <input type="checkbox" id="ch'+json[i]["id"]+'" ><p class="checkmark"></p> <i class="fa fa-trash-o i1" id="'+json[i]["id"]+'" onclick="delet(this.id)" ></i>  </div> <p>Title :'+json[i]["title"]+"</p><p>body:"+json[i]["body"]+"</p><p> <fieldset><legend><b>recent comments :</b></legend><p id='demo"+i+"'></p></p></fieldset></label>"; 
+}
+document.getElementById("me").innerHTML=text;
+for(let i=0;i<json.length;i++){
+fetch('https://jsonplaceholder.typicode.com/posts/'+json[i]["id"]+'/comments')
+  .then((response) => response.json())
+  .then(function(json1){ 
+    let te="";
+    for(let i=0;i<3;i++){
+    te+="<p>name: "+json1[i]["name"]+"</p><p>email: "+json1[i]["email"]+"</p><p>body: "+json1[i]["body"]+"</p>";}
+    document.getElementById("demo"+i).innerHTML=te;});
+}
+});
+
+function delet(lab){  
+  if(confirm("Are you sure want to delete ?")){
+    
+    fetch("https://jsonplaceholder.typicode.com/posts/"+lab,{method:"DELETE"})
+  .then(function(json){
+    console.log(lab)
+  console.log(json.status) 
+    if(json.status==200){
+  var hi=document.getElementById(lab).parentElement.id;  
+  var l=document.getElementById(hi).parentElement.id;
+    document.getElementById(l).remove();
+  }
+});
+}
+}
+function del(){  
+  var chbox=document.getElementsByTagName("input");
+  var d=new Array();
+  var j=0;
+  for (var i = 0; i < chbox.length; i++) {
+            if (chbox[i].checked) {
+            d[j++]=chbox[i].id;
+           }
+        }
+        if(confirm("Are you sure want to delete ?")){
+        for (var i = 0; i < d.length; i++) {
+                         document.getElementById(document.getElementById(document.getElementById(d[i]).parentElement.id).parentElement.id).remove();   
+                        }
+                      }
+}
+</script>
+<style>
+body{
+  background-color: #f1f1f1; 
+}
+.flex-container {
+
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: #f1f1f1;
+  flex-wrap: wrap;
+}
+
+.flex-container > label { 
+  height: 100%;
+  padding:9px;
+  width: 47%;
+  margin: 10px;
+  background-color: white;  
+  font-size: 14px;
+  border-radius:10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;  
+} 
+.flex-container > label:hover{
+background-color: #f1f1f1;
+border: 3px solid;
+border-color: DodgerBlue; 
+}
+
+label  input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+label .checkmark { 
+  margin: 0;
+  border-radius: 25px;
+  border: 2px solid #ccc;  
+  width: 20px;
+  height: 20px;
+}
+label input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+  .checkmark:after {
+    content: "";   
+    display: none;
+  }
+label input:checked ~ .checkmark:after {
+  display: block;
+}
+label .checkmark:after {  
+  margin: 2px 5.5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.i1{    
+  font-size:20px;
+  color:gray; 
+}
+.cont{
+  position: fixed;
+}
+.ck{
+  display: flex;
+  justify-content: space-between;
+}
+fieldset {  
+  border-radius:10px;
+  
+}
+
+legend {
+  background-color: blue;
+  color: white;
+  padding: 5px 10px;
+  border-radius:360px;
+}
+</style>
+</head>
+<body>
+  <div class="cont">
+<button type="reset" onclick=" window.location = window.location.href;">RESET</button> 
+<button onclick="del()">DELETE</button></div>
+<div class="flex-container" id="me">
+</div>
+</body>
+</html>
